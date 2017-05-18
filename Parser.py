@@ -28,10 +28,10 @@ class Parser:
 
                     isFederal, isState = self.checkIfFileIsFederalOrState(fileLines)
 
-                    termCountsDict = self.createTermCountsDict(fileLines, orderedLawTermsDict)
+                    orderedTermCountsDict = self.createOrderedTermCountsDict(fileLines, orderedLawTermsDict)
 
                     rowArray = [os.path.basename(fileName), str(isFederal), str(isState)]
-                    rowArray.extend(termCountsDict.values())
+                    rowArray.extend(orderedTermCountsDict.values())
 
                     outputCsvWriter.writerow(rowArray)
 
@@ -65,7 +65,7 @@ class Parser:
         return isFederal, isState
 
 
-    def createTermCountsDict(self, fileLines, orderedLawTermsDict):
+    def createOrderedTermCountsDict(self, fileLines, orderedLawTermsDict):
         """ Return a dictionary that contains legal-term : (legal-term count/number-of-headers) pairs. """
 
         numHeaders = self.countTheNumberOfHeaders(fileLines)
@@ -73,9 +73,15 @@ class Parser:
         # Count the number of occurances for each term
         fileStr = ''.join(fileLines).lower()
         fileStr = ''.join(fileStr.split())
-        termCountsDict = {}
+        orderedTermCountsDict = collections.OrderedDict()
         for term in orderedLawTermsDict.keys():
-            termCountsDict[term] = fileStr.count(orderedLawTermsDict[term].lower().rstrip('\n')) / float(numHeaders)
+            orderedTermCountsDict[term] = fileStr.count(orderedLawTermsDict[term].lower().rstrip('\n')) / float(numHeaders)
+            print term
+            print orderedLawTermsDict[term]
+            print orderedTermCountsDict[term]
+            print numHeaders
+            print "DONE"
+        return orderedTermCountsDict
 
 
     def countTheNumberOfHeaders(self, fileLines):

@@ -27,10 +27,11 @@ class Parser:
                     fileLines = [line.rstrip('\n') for line in file]
 
                     isFederal, isState = self.checkIfFileIsFederalOrState(fileLines)
+                    fileSize = os.path.getsize(fileName)
 
                     orderedTermCountsDict = self.createOrderedTermCountsDict(fileLines, orderedLawTermsDict)
 
-                    rowArray = [os.path.basename(fileName), str(isFederal), str(isState)]
+                    rowArray = [os.path.basename(fileName), str(isFederal), str(isState), str(fileSize)]
                     rowArray.extend(orderedTermCountsDict.values())
 
                     outputCsvWriter.writerow(rowArray)
@@ -52,7 +53,7 @@ class Parser:
         Create the title row of the output CSV file. 
         The title row consists of file name, fed, state, and all the law term abbreviations. 
         """
-        titleRowArray = ["FILENAME", "FED", "STATE"]
+        titleRowArray = ["FILENAME", "FED", "STATE", "FILESIZE(bytes)"]
         titleRowArray.extend(lawTermAbbreviations)
         return titleRowArray
 

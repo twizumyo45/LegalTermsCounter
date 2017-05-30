@@ -1,6 +1,7 @@
 import os
 import glob
 import csv
+import re
 import collections
 
 class Parser:
@@ -72,16 +73,11 @@ class Parser:
         numHeaders = self.countTheNumberOfHeaders(fileLines)
 
         # Count the number of occurances for each term
-        fileStr = ''.join(fileLines).lower()
-        fileStr = ''.join(fileStr.split())
+        fileStr = ' '.join(fileLines).lower()
         orderedTermCountsDict = collections.OrderedDict()
         for term in orderedLawTermsDict.keys():
-            orderedTermCountsDict[term] = fileStr.count(orderedLawTermsDict[term].lower().rstrip('\n')) / float(numHeaders)
-            print term
-            print orderedLawTermsDict[term]
-            print orderedTermCountsDict[term]
-            print numHeaders
-            print "DONE"
+            searchTermRegex = orderedLawTermsDict[term]
+            orderedTermCountsDict[term] = len(re.findall(searchTermRegex, fileStr)) / float(numHeaders)
         return orderedTermCountsDict
 
 
